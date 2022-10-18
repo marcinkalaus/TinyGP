@@ -6,11 +6,12 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.*;
 
-import java.awt.*;
 import java.io.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Getter
 @Setter
@@ -18,18 +19,22 @@ import java.util.Date;
 public class DataToExcelWriter {
     private String filename;
     private double[][] targets;
-    private List results;
+    private List<String> results;
 
     public DataToExcelWriter()
     {
-        results = new List();
+        results = new ArrayList<>();
     }
 
     void prepareGoodResult()
     {
-        Arrays.stream(results.getSelectedItems()).forEach(s ->
-                s = s.replace(".", ",")
-                        .replace("Best Individual: ", "="));
+        results.forEach(s -> s = s.replace(".",","));
+
+//                .map(s -> {
+//                    s.replace(".",",");
+//                    s.replace("Best individual: ", "=");
+//                    return s;
+//                }).collect(Collectors.toList());
     }
 
     void copyTargets(double[][] targets) {
@@ -69,7 +74,7 @@ public class DataToExcelWriter {
         CellStyle cellStyleResult = workbook.createCellStyle();
         cellStyleResult.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
         cellStyleResult.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        for (short c = 0; c < results.getItemCount() ; c++)
+        for (short c = 0; c < results.size(); c++)
         {
             int columnIndex = startColumnIndex + c;
             XSSFRow row = sheet.getRow(0);
@@ -79,7 +84,7 @@ public class DataToExcelWriter {
             for(int i = 1 ; i <= rowsCount ; i++)
             {
                 XSSFRow rowDetail = sheet.getRow(i);
-                rowDetail.createCell(columnIndex).setCellValue(results.getItem(c));
+                rowDetail.createCell(columnIndex).setCellValue(results.get(c));
             }
         }
 
