@@ -1,4 +1,4 @@
-package agh.genetyczne;
+package DataGeneration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class DataToFileWriter {
 
     void writeToFile() throws IOException {
         DataOutputStream output = new DataOutputStream(new FileOutputStream(filename));
-        output.writeChars(data);
+        output.write(data.getBytes());
         output.close();
     }
 }
