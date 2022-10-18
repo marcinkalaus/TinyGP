@@ -11,6 +11,7 @@ import java.util.*;
 import java.io.*;
 
 public class TinyGP {
+    DataToExcelWriter excelWriter = new DataToExcelWriter();
     double [] fitness;
     char [][] pop;
     static Random rd = new Random();
@@ -108,6 +109,8 @@ public class TinyGP {
                     targets[i][j] = Double.parseDouble(tokens.nextToken().trim());
                 }
             }
+            excelWriter.copyTargets(targets);
+            excelWriter.writeToExcel();
             in.close();
         }
         catch(FileNotFoundException e) {
