@@ -19,8 +19,10 @@ public class TinyGP {
             SUB = 111,
             MUL = 112,
             DIV = 113,
+            SIN = 114,
+            COS = 115,
             FITNESS_SET_START = ADD,
-            FITNESS_SET_END = DIV;
+            FITNESS_SET_END = COS;
     double [] x = new double[FITNESS_SET_START];
     double minRandom, maxRandom;
     char [] program;
@@ -55,6 +57,8 @@ public class TinyGP {
                            else
                                return( num / den );
                        }
+            case SIN: return ( Math.sin( Math.toRadians(run())) );
+            case COS: return ( Math.cos( Math.toRadians(run())) );
             default:
                 return 0.0;
         }
@@ -69,6 +73,8 @@ public class TinyGP {
             case SUB:
             case MUL:
             case DIV:
+            case SIN:
+            case COS:
                 return (traverse(buffer, traverse(buffer, ++bufferCount)));
             default:
                 return 0;
@@ -151,6 +157,8 @@ public class TinyGP {
                 case SUB:
                 case MUL:
                 case DIV:
+                case SIN:
+                case COS:
                     buffer[pos] = prim;
                     one_child = grow(buffer, pos + 1, max, depth - 1);
                     if (one_child < 0)
@@ -192,6 +200,16 @@ public class TinyGP {
                 System.out.print("(");
                 a1 = print_indiv(buffer, ++bufferCounter);
                 System.out.print(" / ");
+                break;
+            case SIN:
+                System.out.print("(");
+                a1 = print_indiv(buffer, ++bufferCounter);
+                System.out.print(" sin ");
+                break;
+            case COS:
+                System.out.print("(");
+                a1 = print_indiv(buffer, ++bufferCounter);
+                System.out.print(" cos ");
                 break;
         }
         a2=print_indiv( buffer, a1 );
@@ -324,6 +342,8 @@ public class TinyGP {
                         case SUB:
                         case MUL:
                         case DIV:
+                        case SIN:
+                        case COS:
                             parentCopy[mutsite] =
                                     (char) (rd.nextInt(FITNESS_SET_END - FITNESS_SET_START + 1)
                                             + FITNESS_SET_START);
