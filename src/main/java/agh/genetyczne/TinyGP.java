@@ -12,6 +12,7 @@ import java.io.*;
 
 public class TinyGP {
     DataToExcelWriter excelWriter = new DataToExcelWriter();
+    MemorizingOutputStream memOut = new MemorizingOutputStream(System.out);
     double [] fitness;
     char [][] pop;
     static Random rd = new Random();
@@ -110,7 +111,6 @@ public class TinyGP {
                 }
             }
             excelWriter.copyTargets(targets);
-            excelWriter.writeToExcel();
             in.close();
         }
         catch(FileNotFoundException e) {
@@ -270,6 +270,7 @@ public class TinyGP {
                 "\nBest Individual: ");
         print_indiv( pop[best], 0 );
         System.out.print( "\n");
+        excelWriter.addNewResult(memOut.getLast());
         System.out.flush();
     }
 
@@ -370,6 +371,7 @@ public class TinyGP {
     }
 
     public TinyGP(String fname, long s ) {
+        System.setOut(new PrintStream(memOut));
         fitness =  new double[POP_SIZE];
         seed = s;
         if ( seed >= 0 )
@@ -389,6 +391,7 @@ public class TinyGP {
         for ( gen = 1; gen < GENERATIONS; gen ++ ) {
             if (  fitnessBestPop > -1e-5 ) {
                 System.out.print("PROBLEM SOLVED\n");
+                excelWriter.writeToExcel();
                 System.exit( 0 );
             }
             for (indivs = 0; indivs < POP_SIZE; indivs ++ ) {
@@ -409,6 +412,7 @@ public class TinyGP {
             stats( fitness, pop, gen );
         }
         System.out.print("PROBLEM *NOT* SOLVED\n");
+        excelWriter.writeToExcel();
         System.exit( 1 );
     }
 }
