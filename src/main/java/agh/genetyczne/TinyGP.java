@@ -207,14 +207,14 @@ public class TinyGP {
                 stringBuilder.append(" / ");
                 break;
             case SIN:
-                stringBuilder.append("(");
+                stringBuilder.append("(SIN(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                stringBuilder.append(" sin ");
+                stringBuilder.append(")");
                 break;
             case COS:
-                stringBuilder.append("(");
+                stringBuilder.append("(COS(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                stringBuilder.append(" cos ");
+                stringBuilder.append(")");
                 break;
         }
         a2=print_indiv( buffer, a1 );
@@ -273,7 +273,7 @@ public class TinyGP {
         print_indiv( pop[best], 0 );
         System.out.println(optimizer.optimize(stringBuilder.toString()));
         System.out.print("\n");
-        excelWriter.addNewResult(memOut.getLast());
+        excelWriter.addNewResult(optimizer.optimize(stringBuilder.toString()));
         System.out.flush();
     }
 
@@ -294,6 +294,7 @@ public class TinyGP {
     int negativeTournament(double [] fitness, int tSize ) {
         int worst = rd.nextInt(POP_SIZE), i, competitor;
         double fworst = 1e34;
+
         for ( i = 0; i < tSize; i ++ ) {
             competitor = rd.nextInt(POP_SIZE);
             if ( fitness[competitor] < fworst ) {

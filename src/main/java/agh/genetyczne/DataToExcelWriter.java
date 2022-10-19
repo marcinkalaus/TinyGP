@@ -2,15 +2,14 @@ package agh.genetyczne;
 
 import lombok.*;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Getter
@@ -28,13 +27,35 @@ public class DataToExcelWriter {
 
     void prepareGoodResult()
     {
-        results.forEach(s -> s = s.replace(".",","));
+        for (int i=0;i<results.size();i++)
+        {
+            String value = results.get(i);
+            //value = value.replace('.', ',');
+            value = replaceX(value);
+            results.set(i, value);
+        }
+    }
 
-//                .map(s -> {
-//                    s.replace(".",",");
-//                    s.replace("Best individual: ", "=");
-//                    return s;
-//                }).collect(Collectors.toList());
+    String replaceX(String v)
+    {
+        for(int i=0;i<24;i++)
+        {
+            char newChar = (char)(i+65);
+            String oldChar = "x" + (i + 1);
+            v = v.replace(oldChar, String.valueOf(newChar) + "x");
+        }
+        return v;
+    }
+
+    String replaceY(String v, int row)
+    {
+        for(int i=0;i<24;i++)
+        {
+            char oldChar = (char)(i+65);
+            String newChar = String.valueOf(oldChar) + row;
+            v = v.replace(String.valueOf(oldChar) + "x", newChar);
+        }
+        return v;
     }
 
     void copyTargets(double[][] targets) {
@@ -69,7 +90,7 @@ public class DataToExcelWriter {
             }
         }
 
-        this.prepareGoodResult();
+        prepareGoodResult();
         int startColumnIndex = parametersCount + 1;
         CellStyle cellStyleResult = workbook.createCellStyle();
         cellStyleResult.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
@@ -84,7 +105,8 @@ public class DataToExcelWriter {
             for(int i = 1 ; i <= rowsCount ; i++)
             {
                 XSSFRow rowDetail = sheet.getRow(i);
-                rowDetail.createCell(columnIndex).setCellValue(results.get(c));
+                String formula = replaceY(results.get(c), i + 1);
+                rowDetail.createCell(columnIndex, CellType.FORMULA).setCellFormula(formula);
             }
         }
 
