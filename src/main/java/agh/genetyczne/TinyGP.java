@@ -43,6 +43,8 @@ public class TinyGP {
         PMUT_PER_NODE  = 0.05,
                        CROSSOVER_PROB = 0.9;
     double [][] targets;
+    StringBuilder stringBuilder;
+    Optimizer optimizer = new Optimizer();
 
     double run() { /* Interpreter */
         char primitive = program[PC++];
@@ -178,45 +180,45 @@ public class TinyGP {
         int a1=0, a2;
         if ( buffer[bufferCounter] < FITNESS_SET_START) {
             if ( buffer[bufferCounter] < varNumber)
-                System.out.print( "X"+ (buffer[bufferCounter] + 1 )+ " ");
+                stringBuilder.append( "X" + (buffer[bufferCounter] + 1 )+ " ");
             else
-                System.out.print( x[buffer[bufferCounter]]);
+                stringBuilder.append( x[buffer[bufferCounter]]);
             return( ++bufferCounter );
         }
         switch (buffer[bufferCounter]) {
             case ADD:
-                System.out.print("(");
+                stringBuilder.append("(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                System.out.print(" + ");
+                stringBuilder.append(" + ");
                 break;
             case SUB:
-                System.out.print("(");
+                stringBuilder.append("(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                System.out.print(" - ");
+                stringBuilder.append(" - ");
                 break;
             case MUL:
-                System.out.print("(");
+                stringBuilder.append("(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                System.out.print(" * ");
+                stringBuilder.append(" * ");
                 break;
             case DIV:
-                System.out.print("(");
+                stringBuilder.append("(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                System.out.print(" / ");
+                stringBuilder.append(" / ");
                 break;
             case SIN:
-                System.out.print("(");
+                stringBuilder.append("(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                System.out.print(" sin ");
+                stringBuilder.append(" sin ");
                 break;
             case COS:
-                System.out.print("(");
+                stringBuilder.append("(");
                 a1 = print_indiv(buffer, ++bufferCounter);
-                System.out.print(" cos ");
+                stringBuilder.append(" cos ");
                 break;
         }
         a2=print_indiv( buffer, a1 );
-        System.out.print( ")");
+        stringBuilder.append( ")");
         return( a2);
     }
 
@@ -254,7 +256,7 @@ public class TinyGP {
         int nodeCount = 0;
         fitnessBestPop = fitness[best];
         fitnessAvgPop = 0.0;
-
+        stringBuilder = new StringBuilder();
         for (i = 0; i < POP_SIZE; i ++ ) {
             nodeCount +=  traverse( pop[i], 0 );
             fitnessAvgPop += fitness[i];
@@ -269,7 +271,8 @@ public class TinyGP {
                 " Best Fitness="+(-fitnessBestPop)+" Avg Size="+ avgLength +
                 "\nBest Individual: ");
         print_indiv( pop[best], 0 );
-        System.out.print( "\n");
+        System.out.println(optimizer.optimize(stringBuilder.toString()));
+        System.out.print("\n");
         excelWriter.addNewResult(memOut.getLast());
         System.out.flush();
     }
@@ -291,7 +294,6 @@ public class TinyGP {
     int negativeTournament(double [] fitness, int tSize ) {
         int worst = rd.nextInt(POP_SIZE), i, competitor;
         double fworst = 1e34;
-
         for ( i = 0; i < tSize; i ++ ) {
             competitor = rd.nextInt(POP_SIZE);
             if ( fitness[competitor] < fworst ) {
