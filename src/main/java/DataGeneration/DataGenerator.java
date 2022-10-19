@@ -17,18 +17,18 @@ class DataGenerator {
     private int upperRandomRange;
     private int numberOfRandomConstants = 100;
     private int numberOfVariables = 1;
-    private float domainLowerBound;
-    private float domainUpperBound;
+    private double domainLowerBound;
+    private double domainUpperBound;
     StringBuilder data;
     double result;
     private Random rand = new Random();
 
     void generateData(int funcNumber) {
-        float step = domainLowerBound < 0 ? (domainUpperBound + domainLowerBound) / numberOfCases : (domainUpperBound - domainLowerBound) / numberOfCases;
-        float y = Float.MIN_VALUE;
+        double step =  (domainUpperBound - domainLowerBound) / numberOfCases;
+        double y = Double.MIN_VALUE;
         data = new StringBuilder();
         data.append(String.format("%d %d %d %d %d\n", numberOfVariables, numberOfRandomConstants, lowerRandomRange, upperRandomRange, numberOfCases));
-        for (float x = domainLowerBound; x < domainUpperBound; x += step) {
+        for (double x =domainLowerBound; x <= domainUpperBound; x += step) {
             if (funcNumber == 1) {
                 result = 5 * Math.pow(x, 3) - Math.pow(2 * x, 2) + 3 * x - 17;
             } else if (funcNumber == 2) {
@@ -45,7 +45,7 @@ class DataGenerator {
                 result = Math.pow(x, 2) + 3*x*y - 7*y + 1;
             }
 
-            if (y != Float.MIN_VALUE){
+            if (y != Double.MIN_VALUE){
                 data.append(x + " " + y + " " + result + "\n");
             } else {
                 data.append(x + " " + result + "\n");
