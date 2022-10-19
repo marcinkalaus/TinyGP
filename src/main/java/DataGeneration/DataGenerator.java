@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Random;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,23 +21,35 @@ class DataGenerator {
     private float domainUpperBound;
     StringBuilder data;
     double result;
+    private Random rand = new Random();
 
     void generateData(int funcNumber) {
         float step = domainLowerBound < 0 ? (domainUpperBound + domainLowerBound) / numberOfCases : (domainUpperBound - domainLowerBound) / numberOfCases;
+        float y = Float.MIN_VALUE;
         data = new StringBuilder();
         data.append(String.format("%d %d %d %d %d\n", numberOfVariables, numberOfRandomConstants, lowerRandomRange, upperRandomRange, numberOfCases));
-        for (float x = domainLowerBound; x <= domainUpperBound; x += step) {
+        for (float x = domainLowerBound; x < domainUpperBound; x += step) {
             if (funcNumber == 1) {
                 result = 5 * Math.pow(x, 3) - Math.pow(2 * x, 2) + 3 * x - 17;
             } else if (funcNumber == 2) {
                 result = Math.sin(x) + Math.cos(x);
             } else if (funcNumber == 3) {
                 result = 2 * Math.log(x + 1);
+            } else if (funcNumber == 4) {
+                y =  domainLowerBound + rand.nextFloat() * (upperRandomRange - lowerRandomRange);
+                result = x + 2*y;
+            } else if (funcNumber == 5) {
+                result = Math.sin(x/2) + 2*Math.cos(x);
+            } else if (funcNumber == 6) {
+                y =  domainLowerBound + rand.nextFloat() * (upperRandomRange - lowerRandomRange);
+                result = Math.pow(x, 2) + 3*x*y - 7*y + 1;
             }
-//                    x + 2*y;
-//                    Math.sin(x/2) + 2*Math.cos(x);
-//                    Math.pow(x, 2) + 3*x*y - 7*y + 1
-            data.append(x + " " + result + "\n");
+
+            if (y != Float.MIN_VALUE){
+                data.append(x + " " + y + " " + result + "\n");
+            } else {
+                data.append(x + " " + result + "\n");
+            }
         }
     }
 }
