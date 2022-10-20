@@ -16,7 +16,7 @@ class DataGenerator {
     private int lowerRandomRange;
     private int upperRandomRange;
     private int numberOfRandomConstants = 100;
-    private int numberOfVariables = 1;
+    private int numberOfVariables = 2;
     private double domainLowerBound;
     private double domainUpperBound;
     StringBuilder data;
@@ -39,7 +39,8 @@ class DataGenerator {
                 y =  domainLowerBound + rand.nextFloat() * (upperRandomRange - lowerRandomRange);
                 result = x + 2*y;
             } else if (funcNumber == 5) {
-                result = Math.sin(x/2) + 2*Math.cos(x);
+                y = domainLowerBound + rand.nextFloat() * (upperRandomRange - lowerRandomRange);
+                result = Math.sin(x/2) + 2*Math.cos(y);
             } else if (funcNumber == 6) {
                 y =  domainLowerBound + rand.nextFloat() * (upperRandomRange - lowerRandomRange);
                 result = Math.pow(x, 2) + 3*x*y - 7*y + 1;

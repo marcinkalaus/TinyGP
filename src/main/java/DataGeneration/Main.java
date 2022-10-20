@@ -14,13 +14,13 @@ public class Main {
         dataGenerator.setNumberOfCases(101);
 
         //dziedzina
-        dataGenerator.setDomainLowerBound(-10);
-        dataGenerator.setDomainUpperBound(10);
+        dataGenerator.setDomainLowerBound(0);
+        dataGenerator.setDomainUpperBound(7);
         //generowanie danych
-        dataGenerator.generateData(6);
+        dataGenerator.generateData(5);
 
         DataToFileWriter dataToFileWriter = new DataToFileWriter();
-        dataToFileWriter.setFilename("6_-10_10.dat");
+        dataToFileWriter.setFilename("5_0_7.dat");
         dataToFileWriter.setData(dataGenerator.getData().toString());
         dataToFileWriter.writeToFile();
     }
